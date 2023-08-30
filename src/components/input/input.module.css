@@ -1,0 +1,20 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-xsmall) 0;
+  font-size: var(--fs-small);
+}
+
+.input {
+  height: var(--sp-medium);
+  border-radius: var(--border-radius);
+  border: solid 1px rgb(111, 111, 111);
+  padding: var(--sp-xsmall);
+}
+
+.label {
+  margin-bottom: var(--sp-xsmall);
+}
+
+@media screen and (max-width: 400px) {
+}

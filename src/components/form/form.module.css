@@ -1,0 +1,17 @@
+.formContainer {
+  display: flex;
+}
+
+.formSection {
+  margin: var(--sp-small);
+}
+
+@media screen and (max-width: 450px) {
+  .formContainer {
+    flex-direction: column;
+  }
+
+  .formSection {
+    margin: var(--sp-xsmall);
+  }
+}
