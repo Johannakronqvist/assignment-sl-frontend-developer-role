@@ -64,33 +64,64 @@ const Form: FC<Props> = ({ setResult }) => {
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //post capexparameters to api's
-    //get results and send the result to third api
-    //setResult
-    const capexResponse = await fetch('/api/proxy?endpoint=capex', {
-      method: 'POST',
-      body: JSON.stringify({
-        sizeMw: 100,
-        hardwareCostPerMw: 800,
-        installationCostPerMw: 200,
-      }),
-    });
-    const capexData = await capexResponse.json();
 
-    const h2ProductionResponse = await fetch(
-      '/api/proxy?endpoint=h2production',
-      {
+    try {
+      const capexResponse = await fetch('/api/proxy?endpoint=capex', {
         method: 'POST',
         body: JSON.stringify({
-          energyInput: 10000,
-          SEC: 50,
-          degradationPerYear: 0.02,
-          years: 10,
+          sizeMw: parameters.sizeMw,
+          hardwareCostPerMw: parameters.hardwareCostPerMw,
+          installationCostPerMw: parameters.installationCostPerMw,
         }),
-      }
-    );
-    const h2ProductionData = await h2ProductionResponse.json();
-    console.log('data is ...', h2ProductionData);
+      });
+
+      const capexData = await capexResponse.json();
+
+      setCapexResponse({
+        installation: capexData.data.installation,
+        hardware: capexData.data.hardware,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const payload = {
+        energyInput: parameters.energyInput,
+        SEC: parameters.SEC,
+        degradationPerYear: parameters.degradationPerYear,
+        years: parameters.years,
+      };
+      console.log('Parameters are: ...', payload);
+      const h2ProductionResponse = await fetch(
+        '/api/proxy?endpoint=h2production',
+        {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        }
+      );
+      const h2ProductionData = await h2ProductionResponse.json();
+
+      setH2ProductionResponse(h2ProductionData.data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      console.log(capexResponse);
+      console.log(h2ProductionResponse);
+      const lcohResponse = await fetch('/api/proxy?endpoint=lcoh', {
+        method: 'POST',
+        body: JSON.stringify({
+          capex: capexResponse,
+          yearlyH2Production: h2ProductionResponse,
+        }),
+      });
+      const lcohData = await lcohResponse.json();
+      console.log('LCOHDATA', lcohData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
