@@ -38,5 +38,5 @@ a {
 h1,
 h2,
 h3 {
-  margin: var(--sp-medium) 0;
+  margin: var(--sp-small) 0;
 }

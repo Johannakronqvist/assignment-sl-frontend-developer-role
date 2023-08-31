@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Form from '../components/form/Form';
+import OutputResult from '../components/outputResult/OutputResult';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 
@@ -16,6 +17,7 @@ export default function Home() {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <Form />
+        <OutputResult />
       </main>
     </>
   );
