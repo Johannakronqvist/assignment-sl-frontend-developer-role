@@ -1,5 +1,12 @@
 import useSWR, { Fetcher } from 'swr';
-import React, { FC, FormEvent, useState, ChangeEvent } from 'react';
+import React, {
+  FC,
+  FormEvent,
+  useState,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import styles from './form.module.css';
 import Input from '../input/Input';
 
@@ -16,22 +23,40 @@ async function fetcher(endpoint: any) {
   return data;
 }
 
-interface Capex {
+type Props = {
+  setResult: Dispatch<SetStateAction<any>>;
+};
+
+// interface CAPEXresponse {
+//   installation: number;
+//   hardware: number;
+// }
+
+interface Parameters {
   sizewMw: number | null;
   hardwareCostPerMw: number | null;
   installationCostPerMw: number | null;
+  energyInput: number | null;
+  SEC: number | null;
+  degradationPerYear: number | null;
+  years: number | null;
 }
 
-const Form: FC = () => {
-  const [capexParameters, setCapexParameters] = useState<Capex>({
+const Form: FC<Props> = ({ setResult }) => {
+  const [capexParameters, setCapexParameters] = useState<Parameters>({
     sizewMw: null,
     hardwareCostPerMw: null,
     installationCostPerMw: null,
+    energyInput: null,
+    SEC: null,
+    degradationPerYear: null,
+    years: null,
   });
+
+  console.log(capexParameters);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

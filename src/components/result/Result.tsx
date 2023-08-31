@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 interface ResultProps {
   title: string;
-  result: number;
+  result: number | null;
 }
 
 const Result: FC<ResultProps> = ({ title, result }) => {
