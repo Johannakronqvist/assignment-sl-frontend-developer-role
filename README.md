@@ -2,15 +2,11 @@ This is the code for the Southern Lights Frontend Developer Role Assignment
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Clone repo
+2. Cd into the project
+3. run `npm install`
+4. run `npm run dev`
+5. Open browser with localhost:3000
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -35,8 +31,9 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 - Handle result state with useState
 - Fetching data from the third endpoint to get the result
 - Displaying result
+- Added loading spinner to inform the user data is being fetch
 - Refactoring code
-- I choose not to do the optional task of implementing the assignment in the Next.js [/app router](https://nextjs.org/blog/next-13-4#nextjs-app-router). I have no previous experience and wanted ro use my time wisely.
+- I choose not to do the optional task of implementing the assignment in the Next.js [/app router]. I did not explore the app directory in Next.js yet, as well as server- /client components because they seem to be still in beta. So i decided to go with something i am more familiar with to use my time wisely
 
 ## Future implementations ideas
 
@@ -52,3 +49,4 @@ For usability reasons it can be useful to add a info icon next to the icon label
 
 - Asked about ideas to make input component accessable.
 - Asked about displaying info for input fields as I was planning to put a more descriptive information of the input for usability reasons.
+- Use AI to help debug some errors.
