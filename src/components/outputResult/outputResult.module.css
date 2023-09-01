@@ -1,3 +1,31 @@
-.resultSection {
+.formContainer {
+  display: flex;
+}
+
+.formSection {
   margin: var(--sp-small);
+}
+
+.button {
+  background-color: rgb(70, 48, 172);
+  color: #fff;
+  font-size: var(--fs-small);
+  padding: var(--sp-small) var(--sp-large);
+  border-radius: 50px;
+  border: none;
+  margin: var(--sp-xsmall);
+}
+
+.button:hover {
+  background-color: rgb(87, 57, 219);
+}
+
+@media screen and (max-width: 450px) {
+  .formContainer {
+    flex-direction: column;
+  }
+
+  .formSection {
+    margin: var(--sp-xsmall);
+  }
 }

@@ -9,18 +9,13 @@ import React, {
 } from 'react';
 import styles from './form.module.css';
 import Input from '../input/Input';
+import { fetchCapexData, fetchH2ProductionData } from '../../api/apiCalls';
+import { validateParameters } from '../../utils/validationUtils';
 
 type Props = {
   setResult: Dispatch<SetStateAction<any>>;
+  setIsLoading: Dispatch<SetStateAction<any>>;
 };
-
-interface ResponseParameters {
-  capex: {
-    installation: number | null;
-    hardware: number | null;
-  };
-  h2Production: number[];
-}
 
 interface Parameters {
   sizeMw: number | null;
@@ -56,7 +51,7 @@ const h2ProductionInputs: {
   { name: 'years', type: 'number', min: 0, step: 1 },
 ];
 
-const Form: FC<Props> = ({ setResult }) => {
+const Form: FC<Props> = ({ setResult, setIsLoading }) => {
   const [errors, setErrors] = useState<{ [key: string]: string | null }>({});
   const [parameters, setParameters] = useState<Parameters>({
     sizeMw: 0,
@@ -94,7 +89,13 @@ const Form: FC<Props> = ({ setResult }) => {
   };
 
   useEffect(() => {
-    if (capexResponse && h2ProductionResponse) {
+    if (
+      capexResponse &&
+      capexResponse.installation !== null &&
+      capexResponse.hardware !== null &&
+      h2ProductionResponse &&
+      h2ProductionResponse.length > 0
+    ) {
       const fetchData = async () => {
         try {
           const lcohResponse = await fetch('/api/proxy?endpoint=lcoh', {
@@ -105,6 +106,7 @@ const Form: FC<Props> = ({ setResult }) => {
             }),
           });
           const lcohData = await lcohResponse.json();
+
           if (lcohData && lcohData.data) {
             setResult({
               lcoh: lcohData.data.LCOH,
@@ -113,81 +115,42 @@ const Form: FC<Props> = ({ setResult }) => {
               hardwareCostProportion: lcohData.data.hardwareCostProportion,
             });
           }
+          setIsLoading(false);
         } catch (error) {
           console.log(error);
+          setIsLoading(false);
         }
       };
 
       fetchData();
     }
   }, [capexResponse, h2ProductionResponse]);
+
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+    let tempErrors: { [key: string]: string | null } = {};
 
     try {
-      const capexResponse = await fetch('/api/proxy?endpoint=capex', {
-        method: 'POST',
-        body: JSON.stringify({
-          sizeMw: parameters.sizeMw,
-          hardwareCostPerMw: parameters.hardwareCostPerMw,
-          installationCostPerMw: parameters.installationCostPerMw,
-        }),
-      });
-
-      const capexData = await capexResponse.json();
-
+      const capexData = await fetchCapexData(parameters);
       setCapexResponse({
         installation: capexData.data.installation,
         hardware: capexData.data.hardware,
       });
-    } catch (error) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        general: 'An error occurred while fetching data.',
-      }));
+    } catch (error: any) {
+      tempErrors.capex = error.message;
+      setIsLoading(false);
     }
 
     try {
-      const payload = {
-        energyInput: parameters.energyInput,
-        SEC: parameters.SEC,
-        degradationPerYear: parameters.degradationPerYear,
-        years: parameters.years,
-      };
-      console.log('Parameters are: ...', payload);
-      const h2ProductionResponse = await fetch(
-        '/api/proxy?endpoint=h2production',
-        {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        }
-      );
-      const h2ProductionData = await h2ProductionResponse.json();
-
+      const h2ProductionData = await fetchH2ProductionData(parameters);
       setH2ProductionResponse(h2ProductionData.data);
-    } catch (error) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        general: 'An error occurred while fetching data.',
-      }));
+    } catch (error: any) {
+      tempErrors.h2Production = error.message;
+      setIsLoading(false);
     }
 
-    try {
-      const lcohResponse = await fetch('/api/proxy?endpoint=lcoh', {
-        method: 'POST',
-        body: JSON.stringify({
-          capex: capexResponse,
-          yearlyH2Production: h2ProductionResponse,
-        }),
-      });
-      const lcohData = await lcohResponse.json();
-      setResult(lcohData);
-    } catch (error) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        general: 'An error occurred while fetching data.',
-      }));
-    }
+    setErrors(tempErrors);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -203,28 +166,10 @@ const Form: FC<Props> = ({ setResult }) => {
       return;
     }
 
-    if (isNaN(parsedValue)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: `The field ${name} should be a number`,
-      }));
-      return;
-    }
-
-    let newError: string | null = null;
-
-    switch (name) {
-      case 'degradationPerYear':
-        if (parsedValue < 0 || parsedValue > 1) {
-          newError = 'Degradation per year must be between 0 and 1';
-        }
-        break;
-      default:
-        if (parsedValue < 0) {
-          newError = `${name} must be greater than or equal to 0`;
-        }
-        break;
-    }
+    const newError = validateParameters(
+      name as keyof ValidationParameters,
+      parsedValue
+    );
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: newError }));
 
@@ -251,7 +196,7 @@ const Form: FC<Props> = ({ setResult }) => {
                 min={input.min}
                 step={input.step}
                 onChange={handleChange}
-                value={input.name}
+                value={parameters[input.name] ?? ''}
               />
             ))}
           </section>
@@ -265,14 +210,14 @@ const Form: FC<Props> = ({ setResult }) => {
                 min={input.min}
                 step={input.step}
                 onChange={handleChange}
-                value={input.name}
+                value={parameters[input.name] ?? ''}
               />
             ))}
           </section>
         </div>
         <button className={styles.button}>Submit</button>
         <button className={styles.button} type='button' onClick={resetForm}>
-          Clear inputs
+          Clear
         </button>
       </form>
       {Object.keys(errors).map((fieldName) => {

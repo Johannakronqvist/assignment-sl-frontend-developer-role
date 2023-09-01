@@ -1,32 +1,27 @@
-import React, { FC } from 'react';
-import styles from './outputResult.module.css';
-import Result from '../result/Result';
+import React, { FC } from "react";
+import styles from "./outputResult.module.css";
+import Result from "../result/Result";
+import { RingLoader } from "react-spinners";
 
-interface ResultParameters {
-  lcoh: number | null;
-  instalationCostProportion: number | null;
-  hardwareCostProportion: number | null;
-}
-
-interface OutputResultProps {
-  result: ResultParameters;
-}
-
-const OutputResult = ({ result }: OutputResultProps) => {
+const OutputResult = ({ result, isLoading }: OutputResultProps) => {
   return (
     <section>
       <h1>Result</h1>
-      <section className={styles.resultSection}>
-        <Result title='LCOH' result={result.lcoh} />
-        <Result
-          title='Instalation Cost Proportion'
-          result={result.instalationCostProportion}
-        />
-        <Result
-          title='Hardware Cost Proportion'
-          result={result.hardwareCostProportion}
-        />
-      </section>
+      {isLoading ? (
+        <RingLoader size={120} color={"#123abc"} loading={isLoading} />
+      ) : (
+        <section className={styles.resultSection}>
+          <Result title="LCOH" result={result.lcoh} />
+          <Result
+            title="Instalation Cost Proportion"
+            result={result.instalationCostProportion}
+          />
+          <Result
+            title="Hardware Cost Proportion"
+            result={result.hardwareCostProportion}
+          />
+        </section>
+      )}
     </section>
   );
 };

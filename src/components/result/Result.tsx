@@ -1,10 +1,5 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 //import styles from './result.module.css';
-
-interface ResultProps {
-  title: string;
-  result: number | null;
-}
 
 const Result: FC<ResultProps> = ({ title, result }) => {
   return (

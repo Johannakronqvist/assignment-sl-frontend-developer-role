@@ -1,15 +1,5 @@
-import React, { FC, ChangeEvent } from 'react';
-import styles from './input.module.css';
-
-interface InputProps {
-  name: string;
-  type: string;
-  min: number;
-  max?: number;
-  step: number;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-}
+import React, { FC, ChangeEvent } from "react";
+import styles from "./input.module.css";
 
 const Input: FC<InputProps> = (props) => {
   return (
@@ -24,6 +14,7 @@ const Input: FC<InputProps> = (props) => {
         min={props.min}
         max={props.max}
         step={props.step}
+        value={props.value}
         onChange={props.onChange}
         required
       />
