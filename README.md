@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is the code for the Southern Lights Frontend Developer Role Assignment
 
 ## Getting Started
 
@@ -14,25 +14,41 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Planning
 
-To learn more about Next.js, take a look at the following resources:
+- Read and understand how the API’s work
+- Tested endpoints in Postman to see the result.
+- Planing a simple UI to make it easier to see which components to create in the code.
+- Decided to go with client-side rendering since the given assignment doesn't involve SEO-critical content, and we are not pre-fetching any data for the form. The only server interaction would be when API calls are made.
+- Made a decision to only reset the input values when the user chooses to. This is because they should be able to only change one parameter if they like while keeping the previous parameters.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![image of ui layout in figma](./public/ui.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Implementation
 
-## Deploy on Vercel
+- Set up project with Next.js/Typescript.
+- Created components for, Form, OutputResult, Input, Result.
+- Fetching data from the first two endpoints
+- Handle input change
+- Handle result state with useState
+- Fetching data from the third endpoint to get the result
+- Displaying result
+- Refactoring code
+- I choose not to do the optional task of implementing the assignment in the Next.js [/app router](https://nextjs.org/blog/next-13-4#nextjs-app-router). I have no previous experience and wanted ro use my time wisely.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Future implementations ideas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Saving search results
+
+Making it possible for the user to save results. This can be useful for comparing different results against each other and even using it for displaying statistics. This could be implemented by having a save button that can save the result to a given name. One could use a drop down menu for choosing between the saved results.
+
+### Display information
+
+For usability reasons it can be useful to add a info icon next to the icon labels. The user can click/hoover this to get further info that explains in more detail what data to input.
+
+## Use of AI
+
+- Asked about ideas to make input component accessable.
+- Asked about displaying info for input fields as I was planning to put a more descriptive information of the input for usability reasons.
