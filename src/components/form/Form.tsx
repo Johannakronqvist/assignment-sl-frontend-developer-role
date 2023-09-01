@@ -52,6 +52,7 @@ const Form: FC<Props> = ({ setResult }) => {
     degradationPerYear: null,
     years: null,
   });
+
   const [capexResponse, setCapexResponse] = useState<
     ResponseParameters['capex']
   >({
@@ -118,33 +119,30 @@ const Form: FC<Props> = ({ setResult }) => {
         }),
       });
       const lcohData = await lcohResponse.json();
-      console.log('LCOHDATA', lcohData);
+      setResult(lcohData);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let { name, value } = e.target;
+    const { name, min, max, value } = e.target;
+    const parsedValue = parseFloat(value);
+    const parsedMin = parseFloat(min);
+    const parsedMax = parseFloat(max);
+
+    if (max !== undefined) {
+      if (parsedValue < parsedMin) e.target.value = min;
+    } else {
+      if (parsedValue < parsedMin) e.target.value = min;
+      if (parsedValue > parsedMax) e.target.value = max;
+    }
 
     setParameters((prevParameters) => ({
       ...prevParameters,
       [name]: value,
     }));
   };
-
-  // let body = {
-  //   method: 'POST',
-  //   body: { sizeMw: 100, hardwareCostPerMw: 800, installationCostPerMw: 200 },
-  //   endpoint: 'CAPEX',
-  //   headers: { 'Content-Type': 'application/json' },
-  // };
-
-  // const { data, error, isLoading } = useSWR({ url: '', body }, fetcher);
-
-  // console.log('CAPEX data', data);
-  // console.log('CAPEX error', error);
-  // console.log('CAPEX isLoading', isLoading);
 
   return (
     <section>
@@ -154,28 +152,59 @@ const Form: FC<Props> = ({ setResult }) => {
         <div className={styles.formContainer}>
           <section className={styles.formSection}>
             <h3>CAPEX for a Hydrogen Plant</h3>
-            <Input name='sizeMw' type='number' onChange={handleChange} />
+
+            <Input
+              name='sizeMw'
+              type='number'
+              min={0}
+              step={1}
+              onChange={handleChange}
+            />
             <Input
               name='hardwareCostPerMw'
               type='number'
+              min={0}
+              step={1}
               onChange={handleChange}
             />
             <Input
               name='installationCostPerMw'
               type='number'
+              min={0}
+              step={1}
               onChange={handleChange}
             />
           </section>
           <section className={styles.formSection}>
             <h3>Hydrogen Production Over Years</h3>
-            <Input name='energyInput' type='number' onChange={handleChange} />
-            <Input name='SEC' type='number' onChange={handleChange} />
+            <Input
+              name='energyInput'
+              type='number'
+              min={0}
+              step={1}
+              onChange={handleChange}
+            />
+            <Input
+              name='SEC'
+              type='number'
+              min={0}
+              step={1}
+              onChange={handleChange}
+            />
             <Input
               name='degradationPerYear'
               type='number'
+              min={0.0}
+              step={0.01}
               onChange={handleChange}
             />
-            <Input name='years' type='number' onChange={handleChange} />
+            <Input
+              name='years'
+              type='number'
+              min={0}
+              step={1}
+              onChange={handleChange}
+            />
           </section>
         </div>
 
