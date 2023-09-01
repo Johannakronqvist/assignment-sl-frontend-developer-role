@@ -40,3 +40,7 @@ h2,
 h3 {
   margin: var(--sp-small) 0;
 }
+
+h1 {
+  color: rgb(70, 48, 172);
+}

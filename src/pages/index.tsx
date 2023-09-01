@@ -15,9 +15,9 @@ interface ResultParameters {
 
 export default function Home() {
   const [result, setResult] = useState<ResultParameters>({
-    lcoh: 300,
-    instalationCostProportion: 0.5,
-    hardwareCostProportion: 0.3,
+    lcoh: 0,
+    instalationCostProportion: 0,
+    hardwareCostProportion: 0,
   });
 
   return (
